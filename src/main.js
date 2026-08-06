@@ -7,6 +7,7 @@
 // @include      https://prehrajto.cz/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=prehraj.to
 // @grant        none
+// @require      file:///workspace/src/iframe-handler.js
 // ==/UserScript==
 
 (function () {
@@ -133,4 +134,104 @@
     }, 1000);
     setTimeout(function () { clearInterval(safetyInterval); }, 30000);
 
+    /* =========================================================
+     *  PART 3: Player Mode Toggle Buttons
+     * ========================================================= */
+
+    var currentMode = 'native'; // 'native' or 'iframe'
+    var originalVideoState = null; // Store original video element state
+
+    function createToggleButton(text, onClick) {
+        var btn = document.createElement('button');
+        btn.textContent = text;
+        btn.style.padding = '8px 16px';
+        btn.style.margin = '0 4px';
+        btn.style.cursor = 'pointer';
+        btn.style.border = '1px solid #ccc';
+        btn.style.backgroundColor = '#f0f0f0';
+        btn.style.borderRadius = '4px';
+        btn.addEventListener('click', onClick);
+        return btn;
+    }
+
+    function switchToNativePlayer() {
+        if (currentMode === 'native') return;
+        
+        // Revert iframe and restore native video
+        IframeHandler.revertIframe();
+        
+        // Update button visibility
+        updateButtonVisibility();
+        
+        currentMode = 'native';
+        console.log('[Bypass] Switched to Native Player');
+    }
+
+    function switchToIframePlayer() {
+        if (currentMode === 'iframe') return;
+        
+        // Replace native video with iframe
+        IframeHandler.replaceWithIframe();
+        
+        // Update button visibility
+        updateButtonVisibility();
+        
+        currentMode = 'iframe';
+        console.log('[Bypass] Switched to Iframe Player');
+    }
+
+    function updateButtonVisibility() {
+        var nativeBtn = document.getElementById('btn-native-player');
+        var iframeBtn = document.getElementById('btn-iframe-player');
+        
+        if (!nativeBtn || !iframeBtn) return;
+        
+        // Show only the button for the inactive mode
+        if (currentMode === 'native') {
+            nativeBtn.style.display = 'none';
+            iframeBtn.style.display = 'inline-block';
+        } else {
+            nativeBtn.style.display = 'inline-block';
+            iframeBtn.style.display = 'none';
+        }
+    }
+
+    function initializeToggleButtons() {
+        var controlContainer = document.querySelector('.tabs__control-players');
+        if (!controlContainer) {
+            console.log('[Bypass] Control container not found, retrying...');
+            setTimeout(initializeToggleButtons, 500);
+            return;
+        }
+
+        // Check if buttons already exist
+        if (document.getElementById('btn-native-player')) {
+            return;
+        }
+
+        // Create Native Player button
+        var nativeBtn = createToggleButton('Native Player', switchToNativePlayer);
+        nativeBtn.id = 'btn-native-player';
+        nativeBtn.style.display = 'none'; // Hidden initially since native is default
+
+        // Create Iframe Player button
+        var iframeBtn = createToggleButton('Iframe Player', switchToIframePlayer);
+        iframeBtn.id = 'btn-iframe-player';
+        iframeBtn.style.display = 'inline-block'; // Visible initially
+
+        // Append buttons to the control container
+        controlContainer.appendChild(nativeBtn);
+        controlContainer.appendChild(iframeBtn);
+
+        console.log('[Bypass] Toggle buttons initialized');
+    }
+
+    // Initialize buttons after DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeToggleButtons);
+    } else {
+        initializeToggleButtons();
+    }
+
 })();
+
