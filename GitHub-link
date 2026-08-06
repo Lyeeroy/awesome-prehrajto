@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name         Free Prehraj.to (GitHub-linked)
-// @namespace    prehrajto-bypass
+// @namespace    awesome-prehrajto
 // @version      1.0
-// @description  Loads the bypass script directly from GitHub
+// @description  Loads the script directly from GitHub
 // @match        https://prehraj.to/*
 // @match        https://prehrajto.cz/*
 // @run-at       document-start
 // @grant        none
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=prehraj.to
 // @require      https://raw.githubusercontent.com/Lyeeroy/free-prehrajto/refs/heads/main/src/iframe-handler.js
 // @require      https://raw.githubusercontent.com/Lyeeroy/free-prehrajto/refs/heads/main/src/main.js
 // @updateURL    https://raw.githubusercontent.com/Lyeeroy/free-prehrajto/refs/heads/main/src/main.js
