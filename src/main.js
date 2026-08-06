@@ -139,61 +139,57 @@
      * ========================================================= */
 
     var currentMode = 'native'; // 'native' or 'iframe'
-    var originalVideoState = null; // Store original video element state
+    var toggleLink = null;
 
-    function createToggleButton(text, onClick) {
-        var btn = document.createElement('button');
-        btn.textContent = text;
-        btn.style.padding = '8px 16px';
-        btn.style.margin = '0 4px';
-        btn.style.cursor = 'pointer';
-        btn.style.border = '1px solid #ccc';
-        btn.style.backgroundColor = '#f0f0f0';
-        btn.style.borderRadius = '4px';
-        btn.addEventListener('click', onClick);
-        return btn;
-    }
-
-    function switchToNativePlayer() {
-        if (currentMode === 'native') return;
-        
-        // Revert iframe and restore native video
-        IframeHandler.revertIframe();
-        
-        // Update button visibility
-        updateButtonVisibility();
-        
-        currentMode = 'native';
-        console.log('[Bypass] Switched to Native Player');
-    }
-
-    function switchToIframePlayer() {
-        if (currentMode === 'iframe') return;
-        
-        // Replace native video with iframe
-        IframeHandler.replaceWithIframe();
-        
-        // Update button visibility
-        updateButtonVisibility();
-        
-        currentMode = 'iframe';
-        console.log('[Bypass] Switched to Iframe Player');
-    }
-
-    function updateButtonVisibility() {
-        var nativeBtn = document.getElementById('btn-native-player');
-        var iframeBtn = document.getElementById('btn-iframe-player');
-        
-        if (!nativeBtn || !iframeBtn) return;
-        
-        // Show only the button for the inactive mode
-        if (currentMode === 'native') {
-            nativeBtn.style.display = 'none';
-            iframeBtn.style.display = 'inline-block';
-        } else {
-            nativeBtn.style.display = 'inline-block';
-            iframeBtn.style.display = 'none';
+    function getActiveMode() {
+        // Check actual iframe state from IframeHandler
+        if (IframeHandler && typeof IframeHandler.isIframeActive === 'function') {
+            return IframeHandler.isIframeActive() ? 'iframe' : 'native';
         }
+        return currentMode;
+    }
+
+    function switchPlayerMode() {
+        var activeMode = getActiveMode();
+        
+        if (activeMode === 'native') {
+            // Switch to iframe player
+            IframeHandler.replaceWithIframe();
+            currentMode = 'iframe';
+            console.log('[Bypass] Switched to Iframe Player');
+        } else {
+            // Switch to native player
+            IframeHandler.revertIframe();
+            currentMode = 'native';
+            console.log('[Bypass] Switched to Native Player');
+        }
+        
+        // Update button text based on new active mode
+        updateButtonText();
+    }
+
+    function updateButtonText() {
+        if (!toggleLink) return;
+        
+        var activeMode = getActiveMode();
+        
+        // Button text shows the INACTIVE mode (the mode you can switch TO)
+        if (activeMode === 'iframe') {
+            toggleLink.textContent = 'Native Player';
+        } else {
+            toggleLink.textContent = 'Iframe Player';
+        }
+    }
+
+    function createToggleLink() {
+        var link = document.createElement('a');
+        link.className = 'link color-g450 text-medium';
+        link.href = 'javascript:void(0)';
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            switchPlayerMode();
+        });
+        return link;
     }
 
     function initializeToggleButtons() {
@@ -204,26 +200,22 @@
             return;
         }
 
-        // Check if buttons already exist
-        if (document.getElementById('btn-native-player')) {
+        // Check if toggle link already exists
+        if (document.getElementById('player-mode-toggle')) {
             return;
         }
 
-        // Create Native Player button
-        var nativeBtn = createToggleButton('Native Player', switchToNativePlayer);
-        nativeBtn.id = 'btn-native-player';
-        nativeBtn.style.display = 'none'; // Hidden initially since native is default
+        // Create single toggle link
+        toggleLink = createToggleLink();
+        toggleLink.id = 'player-mode-toggle';
+        
+        // Set initial button text
+        updateButtonText();
 
-        // Create Iframe Player button
-        var iframeBtn = createToggleButton('Iframe Player', switchToIframePlayer);
-        iframeBtn.id = 'btn-iframe-player';
-        iframeBtn.style.display = 'inline-block'; // Visible initially
+        // Append link to the control container
+        controlContainer.appendChild(toggleLink);
 
-        // Append buttons to the control container
-        controlContainer.appendChild(nativeBtn);
-        controlContainer.appendChild(iframeBtn);
-
-        console.log('[Bypass] Toggle buttons initialized');
+        console.log('[Bypass] Toggle button initialized');
     }
 
     // Initialize buttons after DOM is ready
