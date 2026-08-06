@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         free prehraj.to FINAL BOSS
+// @name         free prehraj.to
 // @namespace    http://tampermonkey.net/
 // @version      10.01.2025
 // @description  replace div for iframe, block cookie from being stored
