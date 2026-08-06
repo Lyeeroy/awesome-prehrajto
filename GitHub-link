@@ -1,0 +1,13 @@
+// ==UserScript==
+// @name         Free Prehraj.to (GitHub-linked)
+// @namespace    prehrajto-bypass
+// @version      1.0
+// @description  Loads the bypass script directly from GitHub
+// @match        https://prehraj.to/*
+// @match        https://prehrajto.cz/*
+// @run-at       document-start
+// @grant        none
+// @require      https://raw.githubusercontent.com/Lyeeroy/free-prehrajto/refs/heads/main/main.js
+// @updateURL    https://raw.githubusercontent.com/Lyeeroy/free-prehrajto/refs/heads/main/main.js
+// @downloadURL  https://raw.githubusercontent.com/Lyeeroy/free-prehrajto/refs/heads/main/main.js
+// ==/UserScript==
