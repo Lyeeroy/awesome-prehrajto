@@ -79,6 +79,12 @@ var IframeHandler = (function() {
 
             // Clear references
             iframeElement = null;
+            
+            // Restore video element visibility if it was hidden
+            if (originalVideoElement) {
+                originalVideoElement.style.display = '';
+            }
+            
             return true;
         } else {
             console.log('[IframeHandler] Cannot revert: missing container or video reference.');

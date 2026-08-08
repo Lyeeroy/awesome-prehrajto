@@ -158,11 +158,17 @@
             IframeHandler.replaceWithIframe();
             currentMode = 'iframe';
             console.log('[Bypass] Switched to Iframe Player');
+            
+            // Re-initialize toggle button after iframe is created
+            setTimeout(initializeToggleButtons, 500);
         } else {
             // Switch to native player
             IframeHandler.revertIframe();
             currentMode = 'native';
             console.log('[Bypass] Switched to Native Player');
+            
+            // Re-initialize toggle button after reverting
+            setTimeout(initializeToggleButtons, 500);
         }
         
         // Update button text based on new active mode
@@ -194,7 +200,11 @@
     }
 
     function initializeToggleButtons() {
-        var controlContainer = document.querySelector('.tabs__control-players');
+        // Try multiple possible selectors for the control container
+        var controlContainer = document.querySelector('.tabs__control-players') 
+                            || document.querySelector('.tabs__control')
+                            || document.querySelector('[class*="tabs__control"]');
+        
         if (!controlContainer) {
             console.log('[Bypass] Control container not found, retrying...');
             setTimeout(initializeToggleButtons, 500);
@@ -203,12 +213,15 @@
 
         // Check if toggle link already exists
         if (document.getElementById('player-mode-toggle')) {
+            updateButtonText();
             return;
         }
 
         // Create single toggle link
         toggleLink = createToggleLink();
         toggleLink.id = 'player-mode-toggle';
+        toggleLink.style.display = 'inline-block';
+        toggleLink.style.marginLeft = '10px';
         
         // Set initial button text
         updateButtonText();
