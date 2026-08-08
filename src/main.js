@@ -7,6 +7,7 @@
 // @include      https://prehrajto.cz/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=prehraj.to
 // @grant        none
+// @require      file:///workspace/src/bloat-hider.js
 // @require      file:///workspace/src/iframe-handler.js
 // ==/UserScript==
 
