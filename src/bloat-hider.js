@@ -37,6 +37,11 @@
             name: 'feedback-handle',
             selector: '#feedback__handle, .feedback__handle',
             enabled: function() { return CONFIG.HIDE_PROMOTIONS; }
+        },
+        {
+            name: 'app-popup',
+            selector: '.popup-content.upper-banner',
+            enabled: function() { return CONFIG.HIDE_ADS; }
         }
         // Add more banners here in the future:
         // {
