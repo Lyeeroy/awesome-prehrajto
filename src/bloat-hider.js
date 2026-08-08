@@ -33,6 +33,11 @@
             selector: '.upper-banner-small.upper-banner-small-green',
             enabled: function() { return CONFIG.HIDE_PREMIUM_BANNER; }
         },
+        {
+            name: 'feedback-handle',
+            selector: '#feedback__handle, .feedback__handle',
+            enabled: function() { return CONFIG.HIDE_PROMOTIONS; }
+        }
         // Add more banners here in the future:
         // {
         //     name: 'ad-banner',
